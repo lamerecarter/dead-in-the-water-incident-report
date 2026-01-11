@@ -211,7 +211,7 @@ yuki.tanaka – Domain user (with admin privileges) whose credentials were used 
 kenji.sato – Domain user (admin) credentials used for PsExec login to at least one server (10.1.0.102).
 (If these accounts are not intended for such uses, their use in these contexts is a clear sign of compromise.)
 
-Internal IP Addresses:
+### Internal IP Addresses:
 
 10.1.0.108 – Source of the attack within the network (Azuki Admin PC). Any traffic or logins from this host to servers at unusual times is suspect.
 
@@ -219,11 +219,11 @@ Internal IP Addresses:
 
 10.1.0.102, 10.1.0.188, 10.1.0.204 – Windows servers that were targeted for ransomware deployment via PsExec. (Exact hostnames: likely Azuki file server, logistics server, and possibly an application or database server corresponding to those backup sets.)
 
-External IP/Domain:
+### External IP/Domain:
 
 litter.catbox.moe – External file hosting domain used to download the attacker’s tool (destroy.7z). This domain in corporate traffic is highly unusual. Any DNS queries or HTTP/S connections to litter.catbox.moe should be treated as suspicious. (The specific URL path was https://litter.catbox.moe/io523y.7z – the presence of io523y.7z in web proxy logs would be an IoC of this attack.)
 
-Malicious Files:
+### Malicious Files:
 
 destroy.7z – 7-zip archive downloaded to the backup server. (Hash MD5: 81756ec4f1cd13bfa20105e9d1b3791b as captured in telemetry.) This file likely contained scripts or binaries for destruction or privilege escalation on Linux. The presence of this file on any system is an IoC.
 
@@ -231,7 +231,7 @@ silentlynx.exe – Ransomware payload deployed on Windows systems. It was stored
 
 SILENTLYNX_README.txt – Ransom note text file. Finding this file on any system means that system was hit by the ransomware. The contents typically include ransom payment instructions and possibly a unique victim ID or contact. IoC wise, security teams can search for this filename across endpoints.
 
-Notable Command Patterns: (These commands executed in an enterprise environment are rare and should be considered suspicious in nearly all cases.)
+### Notable Command Patterns: (These commands executed in an enterprise environment are rare and should be considered suspicious in nearly all cases.)
 
 SSH from a workstation to an internal server: e.g., ssh.exe backup-admin@10.1.0.189. In Azuki’s Windows environment, admins typically wouldn’t use a Windows 10 workstation to SSH into a Linux server using such an account. This command usage was a red flag.
 
@@ -247,7 +247,7 @@ Registry and schedule changes: Creation of Run keys named after system services 
 
 Deletion of USN Journal: fsutil usn deletejournal – almost never used legitimately on servers, as it’s a destructive action.
 
-Logging Artifacts:
+# Logging Artifacts:
 
 MDE Alerts or EDR Detections: Although not explicitly stated, it’s possible that Microsoft Defender for Endpoint raised alerts during some of these actions (e.g., “Suspicious use of vssadmin” or “Ransomware behavior detected”). Any such alerts on or before Nov 25 should be pulled as IoCs to see if the pattern matches known ransomware behavior (which it clearly does).
 
@@ -464,7 +464,7 @@ This confirmed that files by that name were created on the infected servers arou
 
 These KQL queries were instrumental in unraveling the attack. They allowed us to quickly filter millions of log events down to the handful of malicious actions. We preserved the relevant query results as evidence (see embedded screenshots) to back each finding. The approach was to start from known indicators (e.g., suspicious use of SSH or PsExec) and iteratively drill down: each clue (like an IP, account, or filename) informed the next query. This methodology can be re-used in future investigations or hunting exercises. For example, queries for vssadmin and wbadmin commands can proactively alert on similar ransomware behavior, and queries for unusual processes (like rm -rf on a Linux server by an unexpected user) can catch attackers early in the act.
 
-MITRE ATT&CK Technique Summary
+# MITRE ATT&CK Technique Summary
 
 The attack chain covered a broad range of tactics and techniques in the MITRE ATT&CK framework. Below is a summary of the techniques observed, organized by their ATT&CK tactic category:
 
@@ -530,7 +530,7 @@ In summary, the MITRE ATT&CK mapping reveals a comprehensive attack spanning mul
 
 Understanding these techniques helps Azuki Corp and others to improve specific defenses. For instance, focusing on detection for T1489/T1490 behaviors (stop of backup services, shadow copy deletion) could provide early warning of an ongoing ransomware attack. Likewise, being alert to T1021 (remote admin tool usage) and T1552 (access of credential files) can catch an attacker in the preparatory stages before the actual impact.
 
-Lessons Learned
+# Lesson Learned
 
 This incident provides several critical lessons for Azuki Corp’s security posture and for any organization seeking to defend against similar attacks:
 
