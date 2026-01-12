@@ -80,7 +80,6 @@ The attacker executed a ransomware playbook prioritizing ***recovery denial:***
 ## 🔍 Summary of Findings (Flags)
 
 - ✅ Completed in this report: Flags 1–26
-- ⏳ Placeholders (waiting on your exact Q/A): Flags 14–19
 
 | Flag  | Phase              | Category            | Finding                                                           |
 | ----- | ------------------ | ------------------- | ----------------------------------------------------------------- |
